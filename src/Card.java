@@ -13,10 +13,6 @@ public abstract class Card {
         effects = new ArrayList<IEffect>();
         undoables = new ArrayList<IUndoable>();
     }
-
-    public abstract void play();
-    protected abstract void die();
-
     public String getName() {
         return name;
     }
