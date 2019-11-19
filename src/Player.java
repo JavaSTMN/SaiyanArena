@@ -46,6 +46,10 @@ public class Player {
         }
     }
 
+    public boolean isDead() {
+        return hero.getLifePoints() <= 0;
+    }
+
     public ManaReserve getManaReserve() {
         return reserve;
     }

@@ -15,6 +15,10 @@ public class ManaReserve {
         return false;
     }
 
+    public boolean isFull() {
+        return actualMax >= MANA_MAX_LIMIT;
+    }
+
     public void use(int amount) {
         actualAvailable -= amount;
 

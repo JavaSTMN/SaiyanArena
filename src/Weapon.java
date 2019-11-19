@@ -1,4 +1,4 @@
-public class Weapon extends Minion implements IAttacking {
+public class Weapon extends Card implements IAttacking {
     private int attack;
     private int durability;
 
@@ -7,17 +7,25 @@ public class Weapon extends Minion implements IAttacking {
     }
 
     @Override
-    protected void die() {
-        dieEvent.onDie();
-    }
-
-    @Override
     public void attack(ITarget target) {
         target.takeDamage(attack);
 
         durability -= 1;
+    }
 
-        if(durability  <= 0)
-            die();
+    public void setAttack(int amount) {
+        this.attack = amount;
+    }
+
+    public int getAttack() {
+        return attack;
+    }
+
+    public void setDurability(int amount) {
+        this.durability = amount;
+    }
+
+    public int getDurability() {
+        return durability;
     }
 }

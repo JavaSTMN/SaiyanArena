@@ -22,23 +22,40 @@ public class Game {
         }
 
         shuffleDecks();
-
         initHand(playerOne);
         initHand(playerTwo);
 
-        giveExtraToSecondPlayer();
+        getPlayer(PlaySide.WAITING_PLAYER).drawNextCard();
+        // faire piocher la piece au waiting player
 
         // Etape draft
 
-        if(playerOne.getSide() == PlaySide.ACTIVE_PLAYER) {
-            // debut de tour premier joueur
-        }
-        else{
-            // sinon second joueur
-        }
+        beginTurn();
     }
 
     private void beginTurn() {
+        Player currentPlayer = getPlayer(PlaySide.ACTIVE_PLAYER);
+        currentPlayer.drawNextCard();
+
+        ManaReserve reserve = currentPlayer.getManaReserve();
+        if(!reserve.isFull())
+            reserve.fill();
+
+        reserve.refull();
+    }
+
+    private void endTurn() {
+
+    }
+
+    private Player getPlayer(PlaySide side) {
+        if(playerOne.getSide() == side)
+            return playerOne;
+
+        return playerTwo;
+    }
+
+    private void checkGameOver() {
 
     }
 
@@ -48,20 +65,9 @@ public class Game {
     }
 
     private void initHand(Player player) {
-        CardContainer<Card> hand = player.getHand();
-        CardContainer<Card> deck = player.getDeck();
-
-        hand.add(deck.peekFirst());
-        hand.add(deck.peekFirst());
-        hand.add(deck.peekFirst());
-    }
-
-    private void giveExtraToSecondPlayer() {
-        CardContainer<Card> hand = playerTwo.getHand();
-
-        hand.peekFirst();
-
-        // rajouter carte piece
+        player.drawNextCard();
+        player.drawNextCard();
+        player.drawNextCard();
     }
 
     private int flip() {
