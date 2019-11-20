@@ -1,13 +1,26 @@
-import java.util.Collections;
+package main;
+
+import main.card.Card;
+import main.card.Minion;
+import main.model.CardContainer;
+import main.model.ManaReserve;
+import main.model.Player;
+
 import java.util.Random;
 
 public class Game {
     private Player playerOne;
     private Player playerTwo;
 
+    private int turnNumber;
+    private int sideSwitched;
+
     public Game(Player playerOne, Player playerTwo) {
         this.playerOne = playerOne;
         this.playerTwo = playerTwo;
+
+        turnNumber = 0;
+        sideSwitched = 0;
     }
 
     public void beginPlay() {
@@ -26,14 +39,16 @@ public class Game {
         initHand(playerTwo);
 
         getPlayer(PlaySide.WAITING_PLAYER).drawNextCard();
-        // faire piocher la piece au waiting player
 
-        // Etape draft
+        // faire piocher la piece au waiting player
 
         beginTurn();
     }
 
     private void beginTurn() {
+        if(sideSwitched%2 < 1)
+            turnNumber++;
+
         Player currentPlayer = getPlayer(PlaySide.ACTIVE_PLAYER);
         currentPlayer.drawNextCard();
 
@@ -42,10 +57,36 @@ public class Game {
             reserve.fill();
 
         reserve.refull();
+
+        CardContainer<Minion> currentPlayerBoard = currentPlayer.getBoard();
+
+        for (Minion minion : currentPlayerBoard) {
+            minion.active();
+        }
     }
 
     private void endTurn() {
+        HandleMinions(getPlayer(PlaySide.ACTIVE_PLAYER));
+        HandleMinions(getPlayer(PlaySide.WAITING_PLAYER));
 
+        updateSide();
+
+        beginTurn();
+    }
+
+    private GameResult CheckGameOver() {
+        if(playerOne.isDead())
+            return new GameResult(playerTwo, turnNumber);
+
+        if(playerTwo.isDead())
+            return new GameResult(playerOne, turnNumber);
+
+        return null;
+    }
+
+    public void updateSide() {
+        getPlayer(PlaySide.ACTIVE_PLAYER).setSide(PlaySide.WAITING_PLAYER);
+        getPlayer(PlaySide.WAITING_PLAYER).setSide(PlaySide.ACTIVE_PLAYER);
     }
 
     private Player getPlayer(PlaySide side) {
@@ -53,10 +94,6 @@ public class Game {
             return playerOne;
 
         return playerTwo;
-    }
-
-    private void checkGameOver() {
-
     }
 
     private void shuffleDecks() {
@@ -75,9 +112,17 @@ public class Game {
 
         return random.nextInt(2);
     }
+
+    private void HandleMinions(Player player) {
+        CardContainer<Minion> board = player.getBoard();
+        CardContainer<Card> graveyard = player.getGraveyard();
+
+        for(Minion minion : board) {
+            if(minion.isDead()) {
+                board.remove(minion);
+                graveyard.add(minion);
+            }
+        }
+    }
 }
 
-enum PlaySide {
-    WAITING_PLAYER,
-    ACTIVE_PLAYER,
-}

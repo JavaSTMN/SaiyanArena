@@ -1,3 +1,5 @@
+package main.card;
+
 public class Hero implements ITarget {
     private final int MAX_LIFE_POINTS = 30;
     private int lifePoints;
@@ -6,7 +8,6 @@ public class Hero implements ITarget {
 
     public Hero(HeroClass heroClass) {
         this.heroClass = heroClass;
-
         lifePoints = MAX_LIFE_POINTS;
     }
 

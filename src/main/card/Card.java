@@ -1,3 +1,8 @@
+package main.card;
+
+import main.effects.IEffect;
+import main.effects.IUndoable;
+
 import java.util.ArrayList;
 
 public abstract class Card {
@@ -18,14 +23,17 @@ public abstract class Card {
     }
 
     public int getManaCost() {
+
         return manaCost;
     }
 
     public void addEffect(IEffect effect) {
+
         effects.add(effect);
     }
 
     public void addUndoableEffect(IUndoable undoableEffect) {
+
         undoables.add(undoableEffect);
     }
 }

@@ -1,3 +1,5 @@
+package main.card;
+
 public class Weapon extends Card implements IAttacking {
     private int attack;
     private int durability;
@@ -9,7 +11,6 @@ public class Weapon extends Card implements IAttacking {
     @Override
     public void attack(ITarget target) {
         target.takeDamage(attack);
-
         durability -= 1;
     }
 

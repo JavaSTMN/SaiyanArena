@@ -1,3 +1,5 @@
+package main.model;
+
 public class ManaReserve {
     private final int MANA_MAX_LIMIT = 10;
     private int actualMax;

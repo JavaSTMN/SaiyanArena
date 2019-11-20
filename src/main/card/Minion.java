@@ -1,15 +1,15 @@
+package main.card;
+
 public abstract class Minion extends Card implements IAttacking, ITarget {
     private int attack;
     private int lifePoints;
-    protected IMinionDieEvent dieEvent;
 
+    private boolean used;
 
     public Minion(String name, int manaCost) {
         super(name, manaCost);
-    }
 
-    public void addDieEvent(IMinionDieEvent dieEvent){
-        this.dieEvent = dieEvent;
+        used = false;
     }
 
     public int getAttack() {
@@ -50,6 +50,7 @@ public abstract class Minion extends Card implements IAttacking, ITarget {
     @Override
     public void attack(ITarget target) {
         target.takeDamage(attack);
+        used = true;
     }
 
     @Override
@@ -58,5 +59,17 @@ public abstract class Minion extends Card implements IAttacking, ITarget {
 
         if(amount <= 0)
             die();
+    }
+
+    public void active() {
+        used = false;
+    }
+
+    public boolean isDead() {
+        return lifePoints <= 0;
+    }
+
+    public boolean hasBeenUsed() {
+        return used;
     }
 }
