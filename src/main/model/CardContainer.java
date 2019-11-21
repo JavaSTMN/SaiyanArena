@@ -21,26 +21,41 @@ public class CardContainer<T extends Card> implements Iterable<T> {
     }
 
 
-    public void add(T card) {
+    public void add(T card) throws IndexOutOfBoundsException {
         if(maxElements >= 0) {
           if(cards.size() >= maxElements) {
               return;
           }
         }
 
-        cards.add(card);
+        try {
+            cards.add(card);
+        }
+        catch(IndexOutOfBoundsException ex) {
+            throw ex;
+        }
     }
 
     public void remove(T card) {
         cards.remove(card);
     }
 
-    public T get(int index) {
-        return cards.get(index);
+    public T get(int index) throws IndexOutOfBoundsException {
+        try {
+            return cards.get(index);
+        }
+        catch(IndexOutOfBoundsException ex) {
+            throw ex;
+        }
     }
 
-    public T peekFirst() {
-        return cards.remove(0);
+    public T peekFirst() throws IndexOutOfBoundsException {
+        try {
+            return cards.remove(0);
+        }
+        catch(IndexOutOfBoundsException ex)  {
+            throw ex;
+        }
     }
 
     public void shuffle() {
@@ -52,6 +67,9 @@ public class CardContainer<T extends Card> implements Iterable<T> {
     }
 
     public boolean isFull() {
+        if(maxElements < 0)
+            return false;
+
         return cards.size() >= maxElements;
     }
 
@@ -83,7 +101,7 @@ class CardContainerIterator<T extends Card> implements Iterator<T> {
     }
 
     @Override
-    public T next() {
+    public T next() throws NoSuchElementException {
         if(position == container.size())
             throw new NoSuchElementException();
 

@@ -5,10 +5,13 @@ import main.card.Minion;
 import main.model.CardContainer;
 import main.model.ManaReserve;
 import main.model.Player;
+import main.utils.Coin;
 
 import java.util.Random;
 
 public class Game {
+
+    private Coin coin;
     private Player playerOne;
     private Player playerTwo;
 
@@ -19,12 +22,16 @@ public class Game {
         this.playerOne = playerOne;
         this.playerTwo = playerTwo;
 
+        coin = new Coin();
+
         turnNumber = 0;
         sideSwitched = 0;
     }
 
     public void beginPlay() {
-        if(flip() > 0){
+        int result = coin.flip();
+
+        if(result> 0){
             playerTwo.setSide(PlaySide.ACTIVE_PLAYER);
             playerOne.setSide(PlaySide.WAITING_PLAYER);
         }
@@ -87,6 +94,8 @@ public class Game {
     public void updateSide() {
         getPlayer(PlaySide.ACTIVE_PLAYER).setSide(PlaySide.WAITING_PLAYER);
         getPlayer(PlaySide.WAITING_PLAYER).setSide(PlaySide.ACTIVE_PLAYER);
+
+        sideSwitched++;
     }
 
     private Player getPlayer(PlaySide side) {
@@ -105,12 +114,6 @@ public class Game {
         player.drawNextCard();
         player.drawNextCard();
         player.drawNextCard();
-    }
-
-    private int flip() {
-        Random random = new Random();
-
-        return random.nextInt(2);
     }
 
     private void HandleMinions(Player player) {

@@ -23,17 +23,14 @@ public abstract class Card {
     }
 
     public int getManaCost() {
-
         return manaCost;
     }
 
     public void addEffect(IEffect effect) {
-
         effects.add(effect);
     }
 
     public void addUndoableEffect(IUndoable undoableEffect) {
-
         undoables.add(undoableEffect);
     }
 }
