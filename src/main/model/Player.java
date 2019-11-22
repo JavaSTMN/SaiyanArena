@@ -4,6 +4,7 @@ import main.PlaySide;
 import main.card.Card;
 import main.card.Hero;
 import main.card.Minion;
+import main.events.IHandListener;
 
 public class Player {
     private CardContainer<Card> hand;
@@ -14,6 +15,8 @@ public class Player {
     private Hero hero;
     private ManaReserve reserve;
     private PlaySide side;
+
+    private IHandListener listener;
 
     int fatigueDamage = 0;
 
@@ -31,6 +34,7 @@ public class Player {
         if(!deck.isEmpty()) {
             Card card = deck.peekFirst();
             placeInHand(card);
+
         }
         else {
             fatigueDamage +=1;
@@ -39,10 +43,23 @@ public class Player {
     }
 
     public void placeInHand(Card card) {
-        if(hand.isFull())
+        if(hand.isFull()) {
             graveyard.add(card);
-        else
+            fireDrawEvent(card, true);
+        }
+        else {
             hand.add(card);
+            fireDrawEvent(card, false);
+        }
+    }
+
+    private void fireDrawEvent(Card card, boolean fullHand) {
+        if(listener != null)
+            listener.onDrawCard(card, fullHand);
+    }
+
+    public void setHandListener(IHandListener listener) {
+        this.listener = listener;
     }
 
     public void setSide(PlaySide side) {

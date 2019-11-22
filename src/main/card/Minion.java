@@ -65,11 +65,11 @@ public abstract class Minion extends Card implements IAttacking, ITarget {
         used = false;
     }
 
-    public boolean isDead() {
-        return lifePoints <= 0;
-    }
-
     public boolean hasBeenUsed() {
         return used;
+    }
+
+    public boolean isDead() {
+        return lifePoints <= 0;
     }
 }

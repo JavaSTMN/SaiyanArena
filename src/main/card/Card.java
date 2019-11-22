@@ -33,4 +33,10 @@ public abstract class Card {
     public void addUndoableEffect(IUndoable undoableEffect) {
         undoables.add(undoableEffect);
     }
+
+    public void executeEffects() {
+        for(IEffect effect : effects) {
+            effect.execute();
+        }
+    }
 }
