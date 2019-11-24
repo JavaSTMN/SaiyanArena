@@ -4,6 +4,7 @@ import main.PlaySide;
 import main.card.Card;
 import main.card.Hero;
 import main.card.Minion;
+import main.card.Weapon;
 import main.events.IHandListener;
 
 public class Player {
@@ -71,20 +72,15 @@ public class Player {
         board.summonMinion(minion);
     }
 
+    public void equipWeapon(Weapon weapon) {
+        hand.remove(weapon);
+        board.summonWeapon(weapon);
+    }
+
     public void playCard(Card card) {
         hand.remove(card);
         card.executeEffects();
         firePlayEvent(card);
-    }
-
-    private void firePlayEvent(Card card) {
-        if(listener != null)
-            listener.onPlayCard(card);
-    }
-
-    private void fireDrawEvent(Card card, boolean fullHand) {
-        if(listener != null)
-            listener.onDrawCard(card, fullHand);
     }
 
     public void setHandListener(IHandListener listener) {
@@ -105,5 +101,15 @@ public class Player {
 
     public boolean hasAvailableMana(int amount) {
         return reserve.hasAvailable(amount);
+    }
+
+    private void firePlayEvent(Card card) {
+        if(listener != null)
+            listener.onPlayCard(card);
+    }
+
+    private void fireDrawEvent(Card card, boolean fullHand) {
+        if(listener != null)
+            listener.onDrawCard(card, fullHand);
     }
 }

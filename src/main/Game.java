@@ -1,10 +1,7 @@
 package main;
 
-import main.card.Card;
+import main.card.*;
 
-import main.card.IAttacking;
-import main.card.ITarget;
-import main.card.Minion;
 import main.events.IBoardListener;
 import main.events.IHandListener;
 import main.model.Board;
@@ -20,6 +17,13 @@ public class Game {
 
     private IBoardListener boardListener;
     private IHandListener handListener;
+
+    public Player getPlayer(PlaySide side) {
+        if(playerOne.getSide() == side)
+            return playerOne;
+
+        return playerTwo;
+    }
 
     public Game(Player playerOne, Player playerTwo) {
         this.playerOne = playerOne;
@@ -60,13 +64,6 @@ public class Game {
         beginTurn();
     }
 
-    public Player getPlayer(PlaySide side) {
-        if(playerOne.getSide() == side)
-            return playerOne;
-
-        return playerTwo;
-    }
-
     public void attack(IAttacking attacker, ITarget target) {
         attacker.attack(target);
     }
@@ -85,6 +82,10 @@ public class Game {
                 currentPlayer.summonMinion(minion);
                 boardListener.onMinionSummoned(minion);
             }
+        }
+        else if(card instanceof Weapon) {
+            Weapon weapon = (Weapon) card;
+            currentPlayer.equipWeapon(weapon);
         }
         else {
             currentPlayer.playCard(card);
