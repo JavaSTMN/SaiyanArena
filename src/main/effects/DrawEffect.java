@@ -17,7 +17,8 @@ public class DrawEffect implements IEffect {
     public void execute() {
         Player currentPlayer = game.getPlayer(PlaySide.ACTIVE_PLAYER);
 
-        currentPlayer.drawFromDeck();
-        currentPlayer.drawFromDeck();
+        for(int i=0; i<cardNumber; i++) {
+            currentPlayer.drawFromDeck();
+        }
     }
 }
