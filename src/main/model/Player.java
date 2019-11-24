@@ -18,6 +18,24 @@ public class Player {
 
     private int fatigueDamage = 0;
 
+    public ManaReserve getManaReserve() {
+        return reserve;
+    }
+
+    public CardContainer<Card> getHand() {
+        return hand;
+    }
+
+    public CardContainer<Card> getDeck() {
+        return board.getDeck();
+    }
+
+    public Board getBoard() {
+        return board;
+    }
+
+    public Hero getHero() { return hero;}
+
     public Player(Hero hero, Board board) {
         this.hero = hero;
         this.board = board;
@@ -87,21 +105,5 @@ public class Player {
 
     public boolean hasAvailableMana(int amount) {
         return reserve.hasAvailable(amount);
-    }
-
-    public ManaReserve getManaReserve() {
-        return reserve;
-    }
-
-    public CardContainer<Card> getHand() {
-        return hand;
-    }
-
-    public CardContainer<Card> getDeck() {
-        return board.getDeck();
-    }
-
-    public Board getBoard() {
-        return board;
     }
 }

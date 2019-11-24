@@ -2,6 +2,7 @@ package main.effects;
 
 import main.Game;
 import main.PlaySide;
+import main.card.Hero;
 import main.card.ITarget;
 import main.card.Minion;
 import main.model.Board;
@@ -28,33 +29,39 @@ public class RandomTargetDamage implements IEffect {
     @Override
     public void execute() {
         Player opponentPlayer = game.getPlayer(PlaySide.WAITING_PLAYER);
-        Board board = opponentPlayer.getBoard();
 
-        ArrayList<ITarget> targets = chooseTargets(board);
+        ArrayList<ITarget> targets = chooseTargets(opponentPlayer);
 
         for(ITarget target : targets) {
             target.takeDamage(1);
         }
     }
 
-    private ArrayList<ITarget> chooseTargets(Board board) {
-        CardContainer<Minion> minions = board.getMinions().Clone();
-        ArrayList<ITarget> targets = new ArrayList<>();
+    private ArrayList<ITarget> chooseTargets(Player opponentPlayer) {
+        Board opponentBoard = opponentPlayer.getBoard();
+        Hero opponentHero = opponentPlayer.getHero();
 
+        ArrayList<ITarget> candidates = new ArrayList<>();
+        CardContainer<Minion> minions = opponentBoard.getMinions().Clone();
+
+        minions.forEach(x -> candidates.add(x));
+        candidates.add(opponentHero);
+
+        ArrayList<ITarget> targets = new ArrayList<>();
         while(minions.size() > 0|| targets.size() <= targetNumber) {
-            ITarget target = chooseTarget(minions);
+            ITarget target = chooseTarget(candidates);
             targets.add(target);
         }
 
         return targets;
     }
 
-    private ITarget chooseTarget(CardContainer<Minion> minions ) {
+    private ITarget chooseTarget(ArrayList<ITarget> candidates) {
         int index = random.nextInt(3);
 
-        Minion minion = minions.get(index);
-        minions.remove(minion);
+        ITarget target = candidates.get(index);
+        candidates.remove(target);
 
-        return minion;
+        return target;
     }
 }
