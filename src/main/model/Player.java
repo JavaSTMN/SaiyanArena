@@ -7,10 +7,8 @@ import main.card.Minion;
 import main.events.IHandListener;
 
 public class Player {
+    private Board board;
     private CardContainer<Card> hand;
-    private CardContainer<Card> deck;
-    private CardContainer<Card> graveyard;
-    private CardContainer<Minion> board;
 
     private Hero hero;
     private ManaReserve reserve;
@@ -18,39 +16,52 @@ public class Player {
 
     private IHandListener listener;
 
-    int fatigueDamage = 0;
+    private int fatigueDamage = 0;
 
-    public Player(Hero hero, CardContainer<Card> hand, CardContainer<Card> deck) {
+    public Player(Hero hero, Board board) {
         this.hero = hero;
-        this.hand = hand;
-        this.deck = deck;
+        this.board = board;
 
+        hand = new CardContainer<>(8);
         reserve = new ManaReserve();
-        board = new CardContainer<Minion>();
-        graveyard = new CardContainer<Card>();
     }
 
-    public void drawNextCard() {
-        if(!deck.isEmpty()) {
-            Card card = deck.peekFirst();
-            placeInHand(card);
+    public void drawFromDeck() {
+        Card card = drawNextCard();
+        boolean fullHand = hand.isFull();
 
-        }
-        else {
+        if(!fullHand)
+            hand.add(card);
+
+        fireDrawEvent(card, fullHand);
+    }
+
+    private Card drawNextCard() {
+        CardContainer<Card> deck = board.getDeck();
+        Card card = deck.peekFirst();
+
+        if(card == null) {
             fatigueDamage +=1;
             hero.takeDamage(fatigueDamage);
         }
+
+        return card;
     }
 
-    public void placeInHand(Card card) {
-        if(hand.isFull()) {
-            graveyard.add(card);
-            fireDrawEvent(card, true);
-        }
-        else {
-            hand.add(card);
-            fireDrawEvent(card, false);
-        }
+    public void summonMinion(Minion minion) {
+        hand.remove(minion);
+        board.summonMinion(minion);
+    }
+
+    public void playCard(Card card) {
+        hand.remove(card);
+        card.executeEffects();
+        firePlayEvent(card);
+    }
+
+    private void firePlayEvent(Card card) {
+        if(listener != null)
+            listener.onPlayCard(card);
     }
 
     private void fireDrawEvent(Card card, boolean fullHand) {
@@ -74,6 +85,10 @@ public class Player {
         return hero.getLifePoints() <= 0;
     }
 
+    public boolean hasAvailableMana(int amount) {
+        return reserve.hasAvailable(amount);
+    }
+
     public ManaReserve getManaReserve() {
         return reserve;
     }
@@ -83,12 +98,10 @@ public class Player {
     }
 
     public CardContainer<Card> getDeck() {
-        return deck;
+        return board.getDeck();
     }
 
-    public CardContainer<Minion> getBoard() {
+    public Board getBoard() {
         return board;
     }
-
-    public CardContainer<Card> getGraveyard() { return graveyard; }
 }

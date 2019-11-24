@@ -12,28 +12,34 @@ public class CardContainer<T extends Card> implements Iterable<T> {
     private int maxElements;
 
     public CardContainer(int maxElements) {
-        cards = new ArrayList<T>();
+        cards = new ArrayList<>();
         this.maxElements = maxElements;
+    }
+
+    public <T extends Card> CardContainer<T> Clone() {
+        return new CardContainer(this);
+    }
+
+    private CardContainer(CardContainer<T> source) {
+        this(source.maxElements);
+
+        for(T card : source) {
+            cards.add(card);
+        }
     }
 
     public CardContainer() {
         this(-1);
     }
 
-
-    public void add(T card) throws IndexOutOfBoundsException {
+    public void add(T card) {
         if(maxElements >= 0) {
           if(cards.size() >= maxElements) {
               return;
           }
         }
 
-        try {
-            cards.add(card);
-        }
-        catch(IndexOutOfBoundsException ex) {
-            throw ex;
-        }
+        cards.add(card);
     }
 
     public void remove(T card) {
@@ -41,21 +47,11 @@ public class CardContainer<T extends Card> implements Iterable<T> {
     }
 
     public T get(int index) throws IndexOutOfBoundsException {
-        try {
-            return cards.get(index);
-        }
-        catch(IndexOutOfBoundsException ex) {
-            throw ex;
-        }
+        return cards.get(index);
     }
 
     public T peekFirst() throws IndexOutOfBoundsException {
-        try {
-            return cards.remove(0);
-        }
-        catch(IndexOutOfBoundsException ex)  {
-            throw ex;
-        }
+        return get(0);
     }
 
     public void shuffle() {
@@ -79,7 +75,7 @@ public class CardContainer<T extends Card> implements Iterable<T> {
 
     @Override
     public Iterator<T> iterator() {
-        return new CardContainerIterator<T>(this);
+        return new CardContainerIterator<>(this);
     }
 }
 
@@ -87,17 +83,14 @@ class CardContainerIterator<T extends Card> implements Iterator<T> {
     private CardContainer<T> container;
     private int position;
 
-    public CardContainerIterator(CardContainer<T> container) {
+    CardContainerIterator(CardContainer<T> container) {
         this.container = container;
         this.position = 0;
     }
 
     @Override
     public boolean hasNext() {
-        if(position < container.size())
-            return true;
-
-        return false;
+        return position < container.size();
     }
 
     @Override

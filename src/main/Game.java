@@ -1,24 +1,22 @@
 package main;
 
 import main.card.Card;
+
+import main.card.IAttacking;
+import main.card.ITarget;
 import main.card.Minion;
 import main.events.IBoardListener;
 import main.events.IHandListener;
+import main.model.Board;
 import main.model.CardContainer;
 import main.model.ManaReserve;
 import main.model.Player;
 import main.utils.Coin;
 
-import java.util.Collections;
-import java.util.Random;
-
 public class Game {
     private Coin coin;
     private Player playerOne;
     private Player playerTwo;
-
-    private int turnNumber;
-    private int sideSwitched;
 
     private IBoardListener boardListener;
     private IHandListener handListener;
@@ -28,12 +26,11 @@ public class Game {
         this.playerTwo = playerTwo;
 
         coin = new Coin();
-
-        turnNumber = 0;
-        sideSwitched = 0;
     }
 
-    public void addHandListener(IHandListener listener) { this.handListener = listener; }
+    public void addHandListener(IHandListener listener) {
+        this.handListener = listener;
+    }
 
     public void addBoardListener(IBoardListener listener) {
         this.boardListener = listener;
@@ -58,47 +55,55 @@ public class Game {
         initHand(playerOne);
         initHand(playerTwo);
 
-        getPlayer(PlaySide.WAITING_PLAYER).drawNextCard();
+        getPlayer(PlaySide.WAITING_PLAYER).drawFromDeck();
 
         beginTurn();
+    }
+
+    public Player getPlayer(PlaySide side) {
+        if(playerOne.getSide() == side)
+            return playerOne;
+
+        return playerTwo;
+    }
+
+    public void attack(IAttacking attacker, ITarget target) {
+        attacker.attack(target);
     }
 
     public void playCard(Card card) {
         Player currentPlayer = getPlayer(PlaySide.ACTIVE_PLAYER);
         CardContainer<Card> hand = currentPlayer.getHand();
 
+        if(!canPlayCard(card)) return;
+
         if(card instanceof Minion) {
             Minion minion = (Minion) card;
-            trySummonMinion(currentPlayer, hand, minion);
+            Board board = currentPlayer.getBoard();
+
+            if(!board.getMinions().isFull()) {
+                currentPlayer.summonMinion(minion);
+                boardListener.onMinionSummoned(minion);
+            }
         }
         else {
-            CardContainer<Card> graveyard = currentPlayer.getGraveyard();
-
-            hand.remove(card);
-            card.executeEffects();
-            graveyard.add(card);
+            currentPlayer.playCard(card);
         }
     }
 
-    public void trySummonMinion(Player player, CardContainer<Card> hand, Minion minion) {
-        CardContainer<Minion> board = player.getBoard();
-        if(!board.isFull()) {
-            summonMinion(board, hand, minion);
-            boardListener.onMinionSummoned(minion);
-        }
-    }
+    private boolean canPlayCard(Card card) {
+        Player currentPlayer = getPlayer(PlaySide.ACTIVE_PLAYER);
+        int manaCost = card.getManaCost();
 
-    private void summonMinion(CardContainer<Minion> board, CardContainer<Card> hand, Minion minion) {
-        hand.remove(minion);
-        board.add(minion);
+        if (currentPlayer.hasAvailableMana(manaCost))
+            return false;
+
+        return true;
     }
 
     private void beginTurn() {
-        if(sideSwitched%2 < 1)
-            turnNumber++;
-
         Player currentPlayer = getPlayer(PlaySide.ACTIVE_PLAYER);
-        currentPlayer.drawNextCard();
+        currentPlayer.drawFromDeck();
 
         ManaReserve reserve = currentPlayer.getManaReserve();
         if(!reserve.isFull())
@@ -106,20 +111,23 @@ public class Game {
 
         reserve.refull();
 
-        CardContainer<Minion> currentPlayerBoard = currentPlayer.getBoard();
-
-        for (Minion minion : currentPlayerBoard) {
+        Board board = currentPlayer.getBoard();
+        for (Minion minion : board.getMinions()) {
             minion.active();
         }
     }
 
-    private void endTurn() {
-        HandleMinions(getPlayer(PlaySide.ACTIVE_PLAYER));
-        HandleMinions(getPlayer(PlaySide.WAITING_PLAYER));
+    public void endTurn() {
+        endPhase();
 
         updateSide();
 
         beginTurn();
+    }
+
+    public void endPhase() {
+        HandleMinions(getPlayer(PlaySide.ACTIVE_PLAYER));
+        HandleMinions(getPlayer(PlaySide.WAITING_PLAYER));
     }
 
     private void updateSide() {
@@ -127,15 +135,6 @@ public class Game {
         getPlayer(PlaySide.WAITING_PLAYER).setSide(PlaySide.ACTIVE_PLAYER);
 
         getPlayer(PlaySide.ACTIVE_PLAYER).setHandListener(handListener);
-
-        sideSwitched++;
-    }
-
-    private Player getPlayer(PlaySide side) {
-        if(playerOne.getSide() == side)
-            return playerOne;
-
-        return playerTwo;
     }
 
     private void shuffleDecks() {
@@ -144,19 +143,17 @@ public class Game {
     }
 
     private void initHand(Player player) {
-        player.drawNextCard();
-        player.drawNextCard();
-        player.drawNextCard();
+        player.drawFromDeck();
+        player.drawFromDeck();
+        player.drawFromDeck();
     }
 
     private void HandleMinions(Player player) {
-        CardContainer<Minion> board = player.getBoard();
-        CardContainer<Card> graveyard = player.getGraveyard();
+        Board board = player.getBoard();
 
-        for(Minion minion : board) {
+        for(Minion minion : board.getMinions()) {
             if(minion.isDead()) {
-                board.remove(minion);
-                graveyard.add(minion);
+                board.placeInGraveyard(minion);
             }
         }
     }

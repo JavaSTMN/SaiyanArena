@@ -2,14 +2,17 @@ package main.card;
 
 import main.effects.IEffect;
 import main.effects.IUndoable;
+import main.events.ICardListener;
 
 import java.util.ArrayList;
 
-public abstract class Card {
-    private int manaCost;
-    private String name;
-    private ArrayList<IEffect> effects;
-    private ArrayList<IUndoable> undoables;
+public class Card {
+    protected int manaCost;
+    protected String name;
+    protected ArrayList<IEffect> effects;
+    protected ArrayList<IUndoable> undoables;
+
+    protected ICardListener listener;
 
     public Card(String name, int manaCost) {
         this.name = name;
@@ -18,6 +21,7 @@ public abstract class Card {
         effects = new ArrayList<IEffect>();
         undoables = new ArrayList<IUndoable>();
     }
+
     public String getName() {
         return name;
     }
@@ -32,6 +36,10 @@ public abstract class Card {
 
     public void addUndoableEffect(IUndoable undoableEffect) {
         undoables.add(undoableEffect);
+    }
+
+    public void setListener(ICardListener listener) {
+        this.listener = listener;
     }
 
     public void executeEffects() {

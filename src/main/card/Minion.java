@@ -1,15 +1,15 @@
 package main.card;
 
-public abstract class Minion extends Card implements IAttacking, ITarget {
+public class Minion extends Card implements IAttacking, ITarget {
     private int attack;
     private int lifePoints;
 
-    private boolean used;
+    private boolean sleep;
 
     public Minion(String name, int manaCost) {
         super(name, manaCost);
 
-        used = false;
+        sleep = true;
     }
 
     public int getAttack() {
@@ -18,10 +18,17 @@ public abstract class Minion extends Card implements IAttacking, ITarget {
 
     public void addAttack(int amount) {
         attack += amount;
+        listener.refresh();
     }
 
     public void removeAttack(int amount) {
         attack = subtractResetZero(attack, amount);
+        listener.refresh();
+    }
+
+    public void heal(int amount) {
+        addLifePoints(amount);
+        listener.refresh();
     }
 
     public void addLifePoints(int amount) {
@@ -45,28 +52,25 @@ public abstract class Minion extends Card implements IAttacking, ITarget {
         return value;
     }
 
-    protected abstract void die();
-
     @Override
     public void attack(ITarget target) {
         target.takeDamage(attack);
-        used = true;
+        sleep = true;
     }
 
     @Override
     public void takeDamage(int amount) {
         removeLifePoints(amount);
-
-        if(amount <= 0)
-            die();
+        listener.refresh();
     }
 
     public void active() {
-        used = false;
+        sleep = false;
+        listener.refresh();
     }
 
-    public boolean hasBeenUsed() {
-        return used;
+    public boolean canAttack() {
+        return sleep;
     }
 
     public boolean isDead() {
