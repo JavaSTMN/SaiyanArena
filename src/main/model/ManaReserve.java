@@ -1,3 +1,5 @@
+package main.model;
+
 public class ManaReserve {
     private final int MANA_MAX_LIMIT = 10;
     private int actualMax;
@@ -8,11 +10,13 @@ public class ManaReserve {
         actualAvailable = 0;
     }
 
-    public boolean hasAvailable(int amount) {
-        if(actualAvailable >= amount)
-                return true;
+    public ManaReserve(int amount) {
+        actualMax = amount;
+        actualAvailable = 0;
+    }
 
-        return false;
+    public boolean hasAvailable(int amount) {
+        return actualAvailable >= amount;
     }
 
     public boolean isFull() {
@@ -20,6 +24,9 @@ public class ManaReserve {
     }
 
     public void use(int amount) {
+        if(amount > actualAvailable)
+            throw new IllegalStateException("Not enough mana.");
+
         actualAvailable -= amount;
 
         if(actualAvailable <= 0)
@@ -34,5 +41,17 @@ public class ManaReserve {
 
     public void refull() {
         actualAvailable = actualMax;
+    }
+
+    public int getActualAvailable() {
+        return actualAvailable;
+    }
+
+    public void setActualAvailable(int amount) {
+        actualAvailable = amount;
+    }
+
+    public int getActualMax() {
+        return actualMax;
     }
 }
