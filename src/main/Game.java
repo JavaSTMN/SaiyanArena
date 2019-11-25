@@ -5,7 +5,6 @@ import main.card.*;
 import main.events.IBoardListener;
 import main.events.IHandListener;
 import main.model.Board;
-import main.model.CardContainer;
 import main.model.ManaReserve;
 import main.model.Player;
 import main.utils.Coin;
@@ -70,7 +69,6 @@ public class Game {
 
     public void playCard(Card card) {
         Player currentPlayer = getPlayer(PlaySide.ACTIVE_PLAYER);
-        CardContainer<Card> hand = currentPlayer.getHand();
 
         if(!canPlayCard(card)) return;
 
@@ -157,4 +155,3 @@ public class Game {
         }
     }
 }
-

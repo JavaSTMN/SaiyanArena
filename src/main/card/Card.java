@@ -9,6 +9,7 @@ import java.util.ArrayList;
 public class Card {
     protected int manaCost;
     protected String name;
+    protected String description;
     protected ArrayList<IEffect> effects;
     protected ArrayList<IUndoable> undoables;
 
@@ -20,6 +21,14 @@ public class Card {
 
         effects = new ArrayList<IEffect>();
         undoables = new ArrayList<IUndoable>();
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public String getName() {

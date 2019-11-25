@@ -44,7 +44,7 @@ public class RandomTargetDamage implements IEffect {
         ArrayList<ITarget> candidates = new ArrayList<>();
         CardContainer<Minion> minions = opponentBoard.getMinions().Clone();
 
-        minions.forEach(x -> candidates.add(x));
+        minions.forEach(candidates::add);
         candidates.add(opponentHero);
 
         ArrayList<ITarget> targets = new ArrayList<>();
@@ -59,9 +59,6 @@ public class RandomTargetDamage implements IEffect {
     private ITarget chooseTarget(ArrayList<ITarget> candidates) {
         int index = random.nextInt(3);
 
-        ITarget target = candidates.get(index);
-        candidates.remove(target);
-
-        return target;
+        return candidates.get(index);
     }
 }

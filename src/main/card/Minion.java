@@ -6,9 +6,11 @@ public class Minion extends Card implements IAttacking, ITarget {
 
     private boolean sleep;
 
-    public Minion(String name, int manaCost) {
+    public Minion(String name, int manaCost, int attack, int lifePoints) {
         super(name, manaCost);
 
+        this.attack = attack;
+        this.lifePoints = lifePoints;
         sleep = true;
     }
 
@@ -37,6 +39,7 @@ public class Minion extends Card implements IAttacking, ITarget {
 
     public void removeLifePoints(int amount) {
         lifePoints = subtractResetZero(lifePoints, amount);
+        listener.refresh();
     }
 
     public int getLifePoints() {
