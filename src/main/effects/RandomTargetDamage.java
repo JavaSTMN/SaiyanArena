@@ -16,10 +16,10 @@ public class RandomTargetDamage implements IEffect {
     private int targetNumber;
     private int amountDamage;
     private Random random;
-    private Game game;
+    private Player opponentPlayer;
 
     public RandomTargetDamage(Game game, int amountDamage, int targetNumber) {
-        this.game = game;
+        this.opponentPlayer = game.getPlayer(PlaySide.WAITING_PLAYER);
         this.amountDamage = amountDamage;
         this.targetNumber = targetNumber;
 
@@ -28,27 +28,25 @@ public class RandomTargetDamage implements IEffect {
 
     @Override
     public void execute() {
-        Player opponentPlayer = game.getPlayer(PlaySide.WAITING_PLAYER);
-
-        ArrayList<ITarget> targets = chooseTargets(opponentPlayer);
+        ArrayList<ITarget> targets = chooseTargets();
 
         for(ITarget target : targets) {
-            target.takeDamage(1);
+            target.takeDamage(amountDamage);
         }
     }
 
-    private ArrayList<ITarget> chooseTargets(Player opponentPlayer) {
+    private ArrayList<ITarget> chooseTargets() {
         Board opponentBoard = opponentPlayer.getBoard();
         Hero opponentHero = opponentPlayer.getHero();
 
         ArrayList<ITarget> candidates = new ArrayList<>();
-        CardContainer<Minion> minions = opponentBoard.getMinions().Clone();
+        CardContainer<Minion> minions = opponentBoard.getMinions();
 
         minions.forEach(candidates::add);
         candidates.add(opponentHero);
 
         ArrayList<ITarget> targets = new ArrayList<>();
-        while(minions.size() > 0|| targets.size() <= targetNumber) {
+        while(minions.size() > 0 || targets.size() <= targetNumber) {
             ITarget target = chooseTarget(candidates);
             targets.add(target);
         }
@@ -57,7 +55,7 @@ public class RandomTargetDamage implements IEffect {
     }
 
     private ITarget chooseTarget(ArrayList<ITarget> candidates) {
-        int index = random.nextInt(3);
+        int index = random.nextInt(candidates.size());
 
         return candidates.get(index);
     }

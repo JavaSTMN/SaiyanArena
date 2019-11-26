@@ -47,6 +47,10 @@ public class Player {
 
     public void drawFromDeck() {
         Card card = drawNextCard();
+        placeInHand(card);
+    }
+
+    public void placeInHand(Card card)  {
         boolean fullHand = hand.isFull();
 
         if(!fullHand)
