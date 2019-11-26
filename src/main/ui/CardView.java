@@ -8,8 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 
 
-public class CardView extends JPanel implements ICardListener {
-
+public class CardView extends JPanel implements ICardView, ICardListener {
     private Card card;
     private JLabel JillustrationMinionLabel;
     private JLabel JmanaLabel;
@@ -42,36 +41,21 @@ public class CardView extends JPanel implements ICardListener {
         }
     }
 
-    public static void main(String[] args) {
-        JFrame gameInstance = new JFrame();
-        gameInstance.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        Minion minion = new Minion("test",2,1,1);
-        CardView view = new CardView(minion);
-        gameInstance.add(view);
-        gameInstance.setSize(143,229);
-        gameInstance.setVisible(true);
-       // gameInstance.pack();
-    }
-
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        ImageIcon backGround = new ImageIcon("C:\\Users\\Peter Duvauchelle\\Desktop\\SeiyantArena\\src\\ressources\\frame-minion.png");
+        ImageIcon backGround = new ImageIcon("src/ressources/frame-minion.png");
         g.drawImage(backGround.getImage(),0,0,null);
     }
 
 
 
     public void initComponent() {
+        ImageIcon manaIcon = new ImageIcon("src/ressources/mana-cost.png");
+        ImageIcon attackIcon = new ImageIcon("src/ressources/attack.png");
+        ImageIcon healthIcon = new ImageIcon("src/ressources/health.png");
+        ImageIcon cardNameIcon  = new ImageIcon("src/ressources/name-card.png");
 
-        ImageIcon manaIcon = new ImageIcon("C:\\Users\\Peter Duvauchelle\\Desktop\\SeiyantArena\\src\\ressources\\mana-cost.png");
-        ImageIcon attackIcon = new ImageIcon("C:\\Users\\Peter Duvauchelle\\Desktop\\SeiyantArena\\src\\ressources\\attack.png");
-        ImageIcon healthIcon = new ImageIcon("C:\\Users\\Peter Duvauchelle\\Desktop\\SeiyantArena\\src\\ressources\\health.png");
-        ImageIcon cardNameIcon  = new ImageIcon("C:\\Users\\Peter Duvauchelle\\Desktop\\SeiyantArena\\src\\ressources\\name-card.png");
-
-
-
-
-        GridLayout layout = new GridLayout(3,2);
+        GridLayout layout = new GridLayout(4,1);
 
         this.setLayout(layout);
 
@@ -110,5 +94,10 @@ public class CardView extends JPanel implements ICardListener {
     @Override
     public void refresh() {
         setCard(card);
+    }
+
+    @Override
+    public Card getCard() {
+        return card;
     }
 }
