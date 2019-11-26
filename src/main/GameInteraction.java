@@ -17,7 +17,7 @@ public class GameInteraction {
     }
 
     public void endTurn() {
-        doGameAction((currentGame) -> currentGame.endTurn());
+        doGameAction(Game::endTurn);
     }
 
     public void attack(IAttacking attacker, ITarget target) {

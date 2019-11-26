@@ -123,13 +123,12 @@ public class Game {
 
     public void endTurn() {
         updateSide();
-
         beginTurn();
     }
 
     public void endPhase() {
-        HandleMinions(getPlayer(PlaySide.ACTIVE_PLAYER));
-        HandleMinions(getPlayer(PlaySide.WAITING_PLAYER));
+        HandleMinions(playerOne);
+        HandleMinions(playerTwo);
     }
 
     private void updateSide() {

@@ -17,7 +17,7 @@ public class CardDatabase {
         minion.addEffect(buff);
         minion.addUndoableEffect(buff);
 
-        minion.setDieAction(() -> buff.undo());
+        minion.setDieAction(buff::undo);
 
         return minion;
     }

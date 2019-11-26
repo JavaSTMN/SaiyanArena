@@ -6,15 +6,14 @@ import main.model.ManaReserve;
 import main.model.Player;
 
 public class PieceEffect implements IEffect {
-    private Game game;
+    private Player currentPlayer;
 
     public PieceEffect(Game game) {
-        this.game = game;
+        this.currentPlayer = game.getPlayer(PlaySide.ACTIVE_PLAYER);
     }
 
     @Override
     public void execute() {
-        Player currentPlayer = game.getPlayer(PlaySide.ACTIVE_PLAYER);
         ManaReserve reserve = currentPlayer.getManaReserve();
 
         reserve.setActualAvailable(2);
