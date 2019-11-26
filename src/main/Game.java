@@ -2,6 +2,7 @@ package main;
 
 import main.card.*;
 
+import main.effects.PieceEffect;
 import main.events.IBoardListener;
 import main.events.IHandListener;
 import main.model.Board;
@@ -59,6 +60,10 @@ public class Game {
         initHand(playerTwo);
 
         getPlayer(PlaySide.WAITING_PLAYER).drawFromDeck();
+
+        Card coin = new Card("La piece", 0);
+        coin.addEffect(new PieceEffect(this));
+        getPlayer(PlaySide.WAITING_PLAYER).placeInHand(coin);
 
         beginTurn();
     }

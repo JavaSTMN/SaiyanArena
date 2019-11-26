@@ -21,6 +21,8 @@ public class Card {
 
         effects = new ArrayList<IEffect>();
         undoables = new ArrayList<IUndoable>();
+
+        description = "";
     }
 
     public void setDescription(String description) {

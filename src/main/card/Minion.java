@@ -1,10 +1,14 @@
 package main.card;
 
+import main.DieAction;
+
 public class Minion extends Card implements IAttacking, ITarget {
     private int attack;
     private int lifePoints;
 
     private boolean sleep;
+
+    private DieAction dieAction;
 
     public Minion(String name, int manaCost, int attack, int lifePoints) {
         super(name, manaCost);
@@ -12,6 +16,10 @@ public class Minion extends Card implements IAttacking, ITarget {
         this.attack = attack;
         this.lifePoints = lifePoints;
         sleep = true;
+    }
+
+    public void setDieAction(DieAction dieAction) {
+        this.dieAction = dieAction;
     }
 
     public int getAttack() {
@@ -53,6 +61,10 @@ public class Minion extends Card implements IAttacking, ITarget {
             value = 0;
 
         return value;
+    }
+
+    public void die() {
+        dieAction.execute();
     }
 
     @Override
