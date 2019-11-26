@@ -51,7 +51,12 @@ public class CardContainer<T extends Card> implements Iterable<T> {
     }
 
     public T peekFirst() throws IndexOutOfBoundsException {
-        return get(0);
+        try{
+            return cards.remove(0);
+        }
+        catch(IndexOutOfBoundsException ex) {
+            return null;
+        }
     }
 
     public void shuffle() {

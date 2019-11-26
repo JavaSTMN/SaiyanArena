@@ -11,11 +11,29 @@ public class Board {
 
     private Weapon weapon;
 
-    public Board(CardContainer<Card> deck) {
-        this.deck = deck;
+    public CardContainer<Minion> getMinions() {
+        return minions;
+    }
 
+    public CardContainer<Card> getDeck() {
+        return deck;
+    }
+
+    public CardContainer<Minion> getGraveyard() {
+        return graveyard;
+    }
+
+    public Weapon getWeapon() {
+        return weapon;
+    }
+
+    public Board() {
         minions = new CardContainer<>(7);
         graveyard = new CardContainer<>();
+    }
+
+    public void setDeck(CardContainer<Card> deck) {
+        this.deck = deck;
     }
 
     public void summonMinion(Minion minion) {
@@ -27,18 +45,7 @@ public class Board {
     }
 
     public void placeInGraveyard(Minion minion) {
+        minions.remove(minion);
         graveyard.add(minion);
-    }
-
-    public CardContainer<Minion> getMinions() {
-        return minions;
-    }
-
-    public CardContainer<Card> getDeck() {
-        return deck;
-    }
-
-    public CardContainer<Minion> getGraveyard() {
-        return graveyard;
     }
 }

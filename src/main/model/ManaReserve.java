@@ -51,6 +51,10 @@ public class ManaReserve {
         actualAvailable = amount;
     }
 
+    public void setActualMax(int amount) {
+        actualMax = amount;
+    }
+
     public int getActualMax() {
         return actualMax;
     }

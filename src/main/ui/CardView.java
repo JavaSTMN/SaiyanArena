@@ -66,7 +66,7 @@ public class CardView extends JPanel implements ICardView, ICardListener {
 
         this.JmanaLabel = new JLabel();
         this.JmanaLabel.setForeground(Color.WHITE);
-        this.JmanaLabel.setFont(new Font(Font.DIALOG, Font.BOLD, 12));
+        this.JmanaLabel.setFont(new Font(Font.DIALOG, Font.BOLD, 16));
         this.JmanaLabel.setIcon(manaIcon);
         this.JmanaLabel.setHorizontalTextPosition(JLabel.CENTER);
         this.JmanaLabel.setVerticalTextPosition(JLabel.CENTER);
@@ -77,8 +77,8 @@ public class CardView extends JPanel implements ICardView, ICardListener {
         this.JcardNameLabel.setVerticalTextPosition(JLabel.CENTER);
 
         this.JattackLabel = new JLabel();
-        this.JattackLabel.setForeground(Color.WHITE);
-        this.JattackLabel.setFont(new Font(Font.DIALOG, Font.BOLD, 12));
+        this.JattackLabel.setForeground(Color.BLACK);
+        this.JattackLabel.setFont(new Font(Font.DIALOG, Font.BOLD, 16));
         this.JattackLabel.setIcon(attackIcon);
         this.JattackLabel.setHorizontalTextPosition(JLabel.CENTER);
         this.JattackLabel.setVerticalTextPosition(JLabel.CENTER);
@@ -87,7 +87,7 @@ public class CardView extends JPanel implements ICardView, ICardListener {
 
         this.JhealthLabel = new JLabel();
         this.JhealthLabel.setForeground(Color.WHITE);
-        this.JhealthLabel.setFont(new Font(Font.DIALOG, Font.BOLD, 12));
+        this.JhealthLabel.setFont(new Font(Font.DIALOG, Font.BOLD, 16));
         this.JhealthLabel.setIcon(healthIcon);
         this.JhealthLabel.setHorizontalTextPosition(JLabel.CENTER);
         this.JhealthLabel.setVerticalTextPosition(JLabel.CENTER);

@@ -5,7 +5,8 @@ import main.card.Card;
 import main.card.Hero;
 import main.card.Minion;
 import main.card.Weapon;
-import main.events.IHandListener;
+import main.events.IBoardListener;
+import main.events.IPlayerListener;
 
 public class Player {
     private Board board;
@@ -15,7 +16,8 @@ public class Player {
     private ManaReserve reserve;
     private PlaySide side;
 
-    private IHandListener listener;
+    private IPlayerListener playerListener;
+    private IBoardListener boardListener;
 
     private int fatigueDamage = 0;
 
@@ -41,7 +43,7 @@ public class Player {
         this.hero = hero;
         this.board = board;
 
-        hand = new CardContainer<>(8);
+        hand = new CardContainer<>(10);
         reserve = new ManaReserve();
     }
 
@@ -51,12 +53,12 @@ public class Player {
     }
 
     public void placeInHand(Card card)  {
-        boolean fullHand = hand.isFull();
+        if(card == null) return;
 
-        if(!fullHand)
+        if(!hand.isFull())
             hand.add(card);
 
-        fireDrawEvent(card, fullHand);
+        fireDrawEvent();
     }
 
     private Card drawNextCard() {
@@ -73,7 +75,9 @@ public class Player {
 
     public void summonMinion(Minion minion) {
         hand.remove(minion);
+        minion.executeEffects();
         board.summonMinion(minion);
+        boardListener.refresh();
     }
 
     public void equipWeapon(Weapon weapon) {
@@ -84,12 +88,13 @@ public class Player {
     public void playCard(Card card) {
         hand.remove(card);
         card.executeEffects();
-        firePlayEvent(card);
     }
 
-    public void setHandListener(IHandListener listener) {
-        this.listener = listener;
+    public void setHandListener(IPlayerListener listener) {
+        this.playerListener = listener;
     }
+
+    public void setBoardListener(IBoardListener listener) {this.boardListener = listener;}
 
     public void setSide(PlaySide side) {
         this.side =  side;
@@ -107,13 +112,17 @@ public class Player {
         return reserve.hasAvailable(amount);
     }
 
-    private void firePlayEvent(Card card) {
-        if(listener != null)
-            listener.onPlayCard(card);
+    public void refreshMinions() {
+        boardListener.refresh();
     }
 
-    private void fireDrawEvent(Card card, boolean fullHand) {
-        if(listener != null)
-            listener.onDrawCard(card, fullHand);
+    public void refresh() {
+        playerListener.refresh();
+        playerListener.onPlayCard();
+    }
+
+    private void fireDrawEvent() {
+        if(playerListener != null)
+            playerListener.onDrawCard();
     }
 }

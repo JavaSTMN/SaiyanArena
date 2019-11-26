@@ -5,16 +5,17 @@ import main.PlaySide;
 import main.card.Minion;
 import main.model.Board;
 import main.model.CardContainer;
+import main.model.Player;
 
 import java.util.ArrayList;
 
 public class AttackBuff implements IEffect, IUndoable {
-    private Board board;
+    private Game game;
     private int attackBonus;
     private CardContainer<Minion> buffedMinions;
 
     public AttackBuff(Game game, int amount) {
-        this.board = game.getPlayer(PlaySide.ACTIVE_PLAYER).getBoard();
+        this.game = game;
         attackBonus = amount;
 
         buffedMinions = new CardContainer<>();
@@ -22,7 +23,9 @@ public class AttackBuff implements IEffect, IUndoable {
 
     @Override
     public void execute() {
-        buffedMinions = board.getMinions().Clone();
+        Board board = game.getPlayer(PlaySide.ACTIVE_PLAYER).getBoard();
+
+        buffedMinions = board.getMinions();
 
         for(Minion minion : buffedMinions) {
             minion.addAttack(attackBonus);

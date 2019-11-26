@@ -16,10 +16,10 @@ public class RandomTargetDamage implements IEffect {
     private int targetNumber;
     private int amountDamage;
     private Random random;
-    private Player opponentPlayer;
+    private Game game;
 
     public RandomTargetDamage(Game game, int amountDamage, int targetNumber) {
-        this.opponentPlayer = game.getPlayer(PlaySide.WAITING_PLAYER);
+        this.game = game;
         this.amountDamage = amountDamage;
         this.targetNumber = targetNumber;
 
@@ -36,6 +36,8 @@ public class RandomTargetDamage implements IEffect {
     }
 
     private ArrayList<ITarget> chooseTargets() {
+        Player opponentPlayer = game.getPlayer(PlaySide.WAITING_PLAYER);
+
         Board opponentBoard = opponentPlayer.getBoard();
         Hero opponentHero = opponentPlayer.getHero();
 
@@ -46,9 +48,11 @@ public class RandomTargetDamage implements IEffect {
         candidates.add(opponentHero);
 
         ArrayList<ITarget> targets = new ArrayList<>();
-        while(minions.size() > 0 || targets.size() <= targetNumber) {
+        int i =0;
+        while(i < targetNumber) {
             ITarget target = chooseTarget(candidates);
             targets.add(target);
+            i++;
         }
 
         return targets;
