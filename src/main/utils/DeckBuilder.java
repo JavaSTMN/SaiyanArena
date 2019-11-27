@@ -1,4 +1,4 @@
-package main;
+package main.utils;
 
 import main.card.Card;
 import main.model.CardContainer;
@@ -8,12 +8,6 @@ public class DeckBuilder {
 
     public DeckBuilder createEmptyDeck(int maxElements) {
         deck = new CardContainer<>(20);
-
-        return this;
-    }
-
-    public DeckBuilder addPair(Card card) {
-        this.addCard(card).addCard(card);
 
         return this;
     }

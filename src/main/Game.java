@@ -8,6 +8,7 @@ import main.model.CardContainer;
 import main.model.ManaReserve;
 import main.model.Player;
 import main.utils.Coin;
+import main.utils.DeckBuilder;
 
 public class Game {
     private Coin coin;
@@ -61,6 +62,7 @@ public class Game {
         getPlayer(PlaySide.WAITING_PLAYER).drawFromDeck();
 
         Card coin = new Card("La piece", 0);
+        coin.setDescription("<html>Gains 1 Mana Crystal <br/> this turn only.</html>");
         coin.addEffect(new PieceEffect(this));
         getPlayer(PlaySide.WAITING_PLAYER).placeInHand(coin);
 
@@ -77,12 +79,12 @@ public class Game {
         DeckBuilder builder = new DeckBuilder();
 
         builder.createEmptyDeck(20)
-                .addPair(db.createStonuskBoar())
-                .addPair(db.createRaptor())
-                .addPair(db.createRaidLeader())
-                .addPair(db.createGrizzly())
-                .addPair(db.createArcaneMissiles())
-                .addPair(db.createArcaneIntellect());
+                .addCard(db.createStonuskBoar()).addCard(db.createStonuskBoar())
+                .addCard(db.createRaptor()).addCard(db.createRaptor())
+                .addCard(db.createRaidLeader()).addCard(db.createRaidLeader())
+                .addCard(db.createGrizzly()).addCard(db.createGrizzly())
+                .addCard(db.createArcaneMissiles()).addCard(db.createArcaneMissiles())
+                .addCard(db.createArcaneIntellect()).addCard(db.createArcaneIntellect());
 
         return builder.build();
     }
@@ -180,11 +182,10 @@ public class Game {
 
         for(Minion minion : board.getMinions()) {
             if(minion.isDead()) {
+                minion.die();
                 board.placeInGraveyard(minion);
             }
         }
-
-        player.refreshMinions();
     }
 
     private void refresh() {

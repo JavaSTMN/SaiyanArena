@@ -15,6 +15,7 @@ public class CardView extends JPanel implements ICardView, ICardListener {
     private JLabel JattackLabel;
     private JLabel JhealthLabel;
     private JLabel JcardNameLabel;
+    private JLabel JcardDescLabel;
 
 
     public CardView(Card card) {
@@ -26,17 +27,18 @@ public class CardView extends JPanel implements ICardView, ICardListener {
         this.card = card;
         card.setListener(this);
         String cardName = card.getName();
+        String description = card.getDescription();
         int manaCost = card.getManaCost();
 
 
         this.JcardNameLabel.setText(cardName);
         this.JmanaLabel.setText(Integer.toString(manaCost));
+        this.JcardDescLabel.setText(description);
 
         if(card instanceof Minion) {
             Minion minion = (Minion) card;
             int currentHealth = minion.getLifePoints();
             int currentAttack = minion.getAttack();
-
 
             this.JhealthLabel.setVisible(true);
             this.JhealthLabel.setText(Integer.toString(currentHealth));
@@ -76,6 +78,12 @@ public class CardView extends JPanel implements ICardView, ICardListener {
         this.JcardNameLabel.setHorizontalTextPosition(JLabel.CENTER);
         this.JcardNameLabel.setVerticalTextPosition(JLabel.CENTER);
 
+        JcardDescLabel = new JLabel();
+        this.JcardDescLabel.setFont(new Font(Font.DIALOG, Font.BOLD, 10));
+        this.JcardDescLabel.setHorizontalTextPosition(JLabel.CENTER);
+        this.JcardDescLabel.setVerticalTextPosition(JLabel.CENTER);
+        this.JcardDescLabel.setHorizontalAlignment(JLabel.CENTER);
+
         this.JattackLabel = new JLabel();
         this.JattackLabel.setForeground(Color.BLACK);
         this.JattackLabel.setFont(new Font(Font.DIALOG, Font.BOLD, 16));
@@ -97,13 +105,19 @@ public class CardView extends JPanel implements ICardView, ICardListener {
         add(this.JmanaLabel, BorderLayout.NORTH);
         add(this.JcardNameLabel, BorderLayout.CENTER);
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(1,2));
-        panel.setOpaque(false);
-        panel.add(JattackLabel);
-        panel.add(JhealthLabel);
+        JPanel southPanel = new JPanel(new GridLayout(2,1));
+        southPanel.setOpaque(false);
+        southPanel.add(JcardDescLabel);
 
-        add(panel, BorderLayout.SOUTH);
+        JPanel underSouthPanel = new JPanel();
+        underSouthPanel.setLayout(new GridLayout(1,2));
+        underSouthPanel.setOpaque(false);
+        underSouthPanel.add(JattackLabel);
+        underSouthPanel.add(JhealthLabel);
+
+        southPanel.add(underSouthPanel);
+
+        add(southPanel, BorderLayout.SOUTH);
         setPreferredSize(new Dimension(132,199));
     }
 

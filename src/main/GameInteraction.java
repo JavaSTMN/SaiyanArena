@@ -17,13 +17,13 @@ public class GameInteraction {
     }
 
     private void doGameAction(Player player, GameAction action) {
-        if(!game.getPlayer(PlaySide.ACTIVE_PLAYER).equals(player)) return;
-
         action.alterGame(game);
         game.endPhase();
     }
 
     public void endTurn(Player player) {
+        if(!game.getPlayer(PlaySide.ACTIVE_PLAYER).equals(player)) return;
+
         doGameAction(player, Game::endTurn);
     }
 
@@ -32,6 +32,8 @@ public class GameInteraction {
     }
 
     public void playCard(Player player, Card card) {
+        if(!game.getPlayer(PlaySide.ACTIVE_PLAYER).equals(player)) return;
+
         doGameAction(player, (currentGame) -> currentGame.playCard(card));
     }
 }

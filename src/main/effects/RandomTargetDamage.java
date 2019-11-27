@@ -30,8 +30,11 @@ public class RandomTargetDamage implements IEffect {
     public void execute() {
         ArrayList<ITarget> targets = chooseTargets();
 
-        for(ITarget target : targets) {
+        for(int i=0;i<targetNumber;i++) {
+            ITarget target = chooseTarget(targets);
             target.takeDamage(amountDamage);
+
+            targets = chooseTargets();
         }
     }
 
@@ -44,18 +47,14 @@ public class RandomTargetDamage implements IEffect {
         ArrayList<ITarget> candidates = new ArrayList<>();
         CardContainer<Minion> minions = opponentBoard.getMinions();
 
-        minions.forEach(candidates::add);
+        minions.forEach(x -> {
+            if(!x.isDead())
+                candidates.add(x);
+        });
+
         candidates.add(opponentHero);
 
-        ArrayList<ITarget> targets = new ArrayList<>();
-        int i =0;
-        while(i < targetNumber) {
-            ITarget target = chooseTarget(candidates);
-            targets.add(target);
-            i++;
-        }
-
-        return targets;
+        return candidates;
     }
 
     private ITarget chooseTarget(ArrayList<ITarget> candidates) {

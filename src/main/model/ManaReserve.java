@@ -5,6 +5,15 @@ public class ManaReserve {
     private int actualMax;
     private int actualAvailable;
 
+    public int getActualAvailable() {
+        return actualAvailable;
+    }
+
+
+    public int getActualMax() {
+        return actualMax;
+    }
+
     public ManaReserve() {
         actualMax = 0;
         actualAvailable = 0;
@@ -13,14 +22,6 @@ public class ManaReserve {
     public ManaReserve(int amount) {
         actualMax = amount;
         actualAvailable = 0;
-    }
-
-    public boolean hasAvailable(int amount) {
-        return actualAvailable >= amount;
-    }
-
-    public boolean isFull() {
-        return actualMax >= MANA_MAX_LIMIT;
     }
 
     public void use(int amount) {
@@ -43,19 +44,19 @@ public class ManaReserve {
         actualAvailable = actualMax;
     }
 
-    public int getActualAvailable() {
-        return actualAvailable;
+    public void addMana(int amount) {
+        actualAvailable++;
     }
 
     public void setActualAvailable(int amount) {
         actualAvailable = amount;
     }
 
-    public void setActualMax(int amount) {
-        actualMax = amount;
+    public boolean hasAvailable(int amount) {
+        return actualAvailable >= amount;
     }
 
-    public int getActualMax() {
-        return actualMax;
+    public boolean isFull() {
+        return actualMax >= MANA_MAX_LIMIT;
     }
 }

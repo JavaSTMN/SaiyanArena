@@ -16,6 +16,6 @@ public class PieceEffect implements IEffect {
     public void execute() {
         ManaReserve reserve = game.getPlayer(PlaySide.ACTIVE_PLAYER).getManaReserve();
 
-        reserve.setActualAvailable(2);
+        reserve.addMana(1);
     }
 }

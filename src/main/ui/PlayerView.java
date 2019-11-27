@@ -1,23 +1,21 @@
 package main.ui;
 
-import main.Game;
+import main.AttackTool;
 import main.GameInteraction;
 import main.PlaySide;
 import main.card.Card;
-import main.events.IBoardListener;
 import main.events.IPlayerListener;
 import main.model.CardContainer;
 import main.model.Player;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class PlayerView extends JPanel implements IPlayerListener {
     private GameInteraction gameInteraction;
+    private AttackTool tool;
     private Player player;
 
     private JPanel cardComponents;
@@ -26,8 +24,9 @@ public class PlayerView extends JPanel implements IPlayerListener {
     private JLabel manaLabel;
     private JButton endTurnButton;
 
-    public PlayerView(GameInteraction gameInteraction, Player player) {
+    public PlayerView(GameInteraction gameInteraction, AttackTool tool, Player player) {
         this.gameInteraction = gameInteraction;
+        this.tool = tool;
         this.player = player;
         player.setHandListener(this);
 
@@ -43,15 +42,29 @@ public class PlayerView extends JPanel implements IPlayerListener {
 
         manaLabel = new JLabel("Mana : 0/10");
         manaLabel.setForeground(Color.BLUE);
+        manaLabel.setFont(new Font(Font.DIALOG, Font.BOLD, 16));
 
         heroHP = new JLabel("Vie : 30/30");
         heroHP.setForeground(Color.RED);
+        heroHP.setFont(new Font(Font.DIALOG, Font.BOLD, 16));
+        heroHP.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent mouseEvent) {
+                setAttackBehavior();
+            }
+        });
+
 
         deckLabel = new JLabel("Deck : 20 left");
         deckLabel.setForeground(Color.WHITE);
+        deckLabel.setFont(new Font(Font.DIALOG, Font.BOLD, 40));
+        deckLabel.setHorizontalTextPosition(JLabel.CENTER);
+        deckLabel.setVerticalTextPosition(JLabel.CENTER);
+        deckLabel.setIcon(new ImageIcon("src/ressources/cards/Card_Back.png"));
 
         endTurnButton = new JButton("EndTurn");
         endTurnButton.addActionListener(actionEvent -> gameInteraction.endTurn(player));
+        endTurnButton.setVisible(false);
 
         cardComponents = new JPanel();
         cardComponents.setLayout(new FlowLayout(FlowLayout.CENTER));
@@ -97,8 +110,13 @@ public class PlayerView extends JPanel implements IPlayerListener {
         int mana = player.getManaReserve().getActualAvailable();
         int health = player.getHero().getLifePoints();
 
-        manaLabel.setText(Integer.toString(mana));
-        heroHP.setText(Integer.toString(health));
+        manaLabel.setText("Mana : " + mana);
+        heroHP.setText("(" + health + " HP)");
+
+        endTurnButton.setVisible(false);
+
+        if(player.getSide() == PlaySide.ACTIVE_PLAYER)
+            endTurnButton.setVisible(true);
     }
 
     public void setCards(GameInteraction gameInteraction, CardContainer<Card> cards) {
@@ -118,6 +136,11 @@ public class PlayerView extends JPanel implements IPlayerListener {
 
         cardComponents.revalidate();
         cardComponents.repaint();
+    }
+
+    public void setAttackBehavior() {
+        tool.setTarget(player.getHero());
+        tool.executeAttack();
     }
 
 }

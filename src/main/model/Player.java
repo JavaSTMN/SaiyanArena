@@ -75,9 +75,9 @@ public class Player {
 
     public void summonMinion(Minion minion) {
         hand.remove(minion);
+        minion.sleep();
         minion.executeEffects();
         board.summonMinion(minion);
-        boardListener.refresh();
     }
 
     public void equipWeapon(Weapon weapon) {
@@ -112,13 +112,10 @@ public class Player {
         return reserve.hasAvailable(amount);
     }
 
-    public void refreshMinions() {
-        boardListener.refresh();
-    }
-
     public void refresh() {
         playerListener.refresh();
         playerListener.onPlayCard();
+        boardListener.refresh();
     }
 
     private void fireDrawEvent() {

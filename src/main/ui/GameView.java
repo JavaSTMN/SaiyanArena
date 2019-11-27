@@ -1,5 +1,6 @@
 package main.ui;
 
+import main.AttackTool;
 import main.Game;
 import main.GameInteraction;
 
@@ -7,7 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class GameView extends JPanel {
-    GameInteraction gameInteraction;
+    private GameInteraction gameInteraction;
 
     private PlayerView playerOne;
     private PlayerView playerTwo;
@@ -17,11 +18,13 @@ public class GameView extends JPanel {
 
     public GameView(Game game) {
         gameInteraction = new GameInteraction(game);
-        boardPlayerOne = new BoardView(gameInteraction, game.getPlayerOne());
-        boardPlayerTwo = new BoardView(gameInteraction, game.getPlayerTwo());
+        AttackTool tool = new AttackTool(gameInteraction);
 
-        playerOne = new PlayerView(gameInteraction, game.getPlayerOne());
-        playerTwo = new PlayerView(gameInteraction, game.getPlayerTwo());
+        boardPlayerOne = new BoardView(gameInteraction, tool, game.getPlayerOne());
+        boardPlayerTwo = new BoardView(gameInteraction, tool, game.getPlayerTwo());
+
+        playerOne = new PlayerView(gameInteraction, tool, game.getPlayerOne());
+        playerTwo = new PlayerView(gameInteraction, tool, game.getPlayerTwo());
 
         initComponents();
     }

@@ -16,6 +16,11 @@ public class Hero implements ITarget {
         subtractLifePoints(amount);
     }
 
+    @Override
+    public boolean isDead() {
+        return lifePoints <= 0;
+    }
+
     public int getLifePoints()  {
         return lifePoints;
     }

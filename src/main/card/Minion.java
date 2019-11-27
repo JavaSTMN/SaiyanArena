@@ -64,7 +64,8 @@ public class Minion extends Card implements IAttacking, ITarget {
     }
 
     public void die() {
-        dieAction.execute();
+        if(dieAction != null)
+            dieAction.execute();
     }
 
     @Override
@@ -81,11 +82,14 @@ public class Minion extends Card implements IAttacking, ITarget {
 
     public void active() {
         sleep = false;
-        listener.refresh();
+    }
+
+    public void sleep() {
+        sleep = true;
     }
 
     public boolean canAttack() {
-        return sleep;
+        return !sleep;
     }
 
     public boolean isDead() {
