@@ -38,10 +38,10 @@ public class BoardView extends JPanel implements IBoardListener {
 
     @Override
     public void refresh() {
-        setMinions(gameInteraction, player.getBoard().getMinions());
+        setMinions(player.getBoard().getMinions());
     }
 
-    void setMinions(GameInteraction gameInteraction, CardContainer<Minion> minions) {
+    void setMinions(CardContainer<Minion> minions) {
         removeAll();
         for(Minion minion : minions) {
             CardView view = new CardView(minion);
@@ -63,12 +63,9 @@ public class BoardView extends JPanel implements IBoardListener {
     public void setAttackBehaviour(Minion minion) {
         Game game = gameInteraction.getGame();
 
-        if(player.equals(game.getPlayer(PlaySide.ACTIVE_PLAYER)))
-        {
-            if(minion.canAttack()) {
-                tool.setAttacker(minion);
-                tool.setAttackerTarget(minion);
-            }
+        if(player.equals(game.getPlayer(PlaySide.ACTIVE_PLAYER))) {
+            tool.setAttacker(minion);
+            tool.setAttackerTarget(minion);
         }
         else {
             tool.setTarget(minion);

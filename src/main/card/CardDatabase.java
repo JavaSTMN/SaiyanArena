@@ -1,6 +1,5 @@
 package main.card;
 
-import com.sun.xml.internal.org.jvnet.mimepull.MIMEConfig;
 import main.Game;
 import main.effects.*;
 

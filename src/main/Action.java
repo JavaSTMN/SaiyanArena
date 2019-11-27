@@ -1,5 +1,5 @@
 package main;
 
-public interface DieAction {
+public interface Action {
     void execute();
 }

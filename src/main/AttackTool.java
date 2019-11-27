@@ -36,7 +36,7 @@ public class AttackTool {
     public void executeAttack() {
         if(attacker == null) return;
 
-        if(attacker.canAttack()) return;
+        if(!attacker.canAttack()) return;
 
         Game game = gameInteraction.getGame();
         Player currentPlayer = game.getPlayer(PlaySide.ACTIVE_PLAYER);
